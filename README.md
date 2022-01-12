@@ -7,3 +7,11 @@ An attempt to blur the lines between source code and compiled executables.
 ScriptCompiler watches a directory with C# files for changes. Whenever files change, it recompiles them and puts the resulting executable in a known directory.
 
 This automates much of the remaining hassle involved in using C# for scripting purposes.
+
+
+## To-do
+
+- [ ] Embed Scripts.csproj. Write it to scripts directory as needed
+- [ ] Use ~/scripts folder
+- [ ] Easy systemd integration a la https://gist.github.com/rgwood/ede13b8324e4c63855f9b016d8104634
+- [ ] same but for a Windows Service?
