@@ -1,9 +1,9 @@
-using Cake.Core;
-using Cake.Frosting;
 using Cake.Common.IO;
 using Cake.Common.Tools.DotNet;
 using Cake.Common.Tools.DotNet.MSBuild;
 using Cake.Common.Tools.DotNet.Publish;
+using Cake.Core;
+using Cake.Frosting;
 
 namespace CakeScratch;
 
@@ -48,11 +48,11 @@ public sealed class BuildTask : FrostingTask<FrostingContext>
             Configuration = "Debug",
             OutputDirectory = "../scripts/publish/",
             Runtime = Utils.GetRid(),
+            SelfContained = false,
             MSBuildSettings = new DotNetMSBuildSettings()
                 .WithProperty("ProgramFile", scriptName)
                 .WithProperty("AssemblyName", scriptNameNoExtension)
                 .WithProperty("PublishSingleFile", "true")
-                .WithProperty("SelfContained", "false")
                 .WithProperty("DebugType", "embedded")
                 .WithProperty("DeleteExistingFiles", "false")
         });
