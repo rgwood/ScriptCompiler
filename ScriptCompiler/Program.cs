@@ -9,9 +9,11 @@ namespace CakeScratch;
 
 public static class Program
 {
+    private const string ScriptsDir = "../scripts";
+
     public static async Task Main(string[] args)
     {
-        using var fsw = new FSWGen("../scripts", "*.cs");
+        using var fsw = new FSWGen(ScriptsDir, "*.cs");
         await foreach (FileSystemEventArgs fse in fsw.Watch())
         {
             Console.WriteLine($"{fse.ChangeType} {fse.Name}");
@@ -23,6 +25,7 @@ public static class Program
                     new CakeHost()
                         .UseContext<FrostingContext>()
                         .UseCakeSetting("ScriptName", fse.Name)
+                        .UseCakeSetting("ScriptsDir", ScriptsDir)
                         .Run(args.Append("--verbosity=diagnostic"));
                     break;
                 default:
@@ -41,9 +44,14 @@ public sealed class BuildTask : FrostingTask<FrostingContext>
         var scriptName = context.Configuration.GetValue("ScriptName");
         if (string.IsNullOrEmpty(scriptName))
             throw new ArgumentException("ScriptName not set");
+
+        var scriptsDir = context.Configuration.GetValue("ScriptsDir");
+        if (string.IsNullOrEmpty(scriptsDir))
+            throw new ArgumentException("Script directory not set");
+
         var scriptNameNoExtension = Path.GetFileNameWithoutExtension(scriptName);
 
-        context.DotNetPublish("../scripts/Scripts.csproj", new DotNetPublishSettings
+        context.DotNetPublish(Path.Combine(scriptsDir, "Scripts.csproj"), new DotNetPublishSettings
         {
             Configuration = "Debug",
             OutputDirectory = "../scripts/publish/",
@@ -57,8 +65,8 @@ public sealed class BuildTask : FrostingTask<FrostingContext>
                 .WithProperty("DeleteExistingFiles", "false")
         });
 
-        context.EnsureDirectoryExists("../scripts/compiled");
-        context.CopyFiles("../scripts/publish/*", "../scripts/compiled/");
+        context.EnsureDirectoryExists(Path.Combine(scriptsDir, "compiled"));
+        context.CopyFiles(Path.Combine(scriptsDir, "publish/*"), Path.Combine(scriptsDir, "compiled/"));
     }
 }
 
