@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Threading.Channels;
 
-namespace CakeScratch;
+namespace ScriptCompiler;
 
 /// <summary>
 /// A helper to turn FileSystemWatcher events into an async enumerable

@@ -5,14 +5,17 @@ using Cake.Common.Tools.DotNet.Publish;
 using Cake.Core;
 using Cake.Frosting;
 
-namespace CakeScratch;
+namespace ScriptCompiler;
 
 public static class Program
 {
-    private const string ScriptsDir = "../scripts";
+    // TODO don't hardcode this
+    private const string ScriptsDir = @"C:\Users\reill\cs-scripts";
 
     public static async Task Main(string[] args)
     {
+        InitializeScriptsDirectory(ScriptsDir);
+
         using var fsw = new FSWGen(ScriptsDir, "*.cs");
         await foreach (FileSystemEventArgs fse in fsw.Watch())
         {
@@ -34,6 +37,19 @@ public static class Program
             }
         }
     }
+
+    private static void InitializeScriptsDirectory(string scriptsDirectory)
+    {
+        // set up scripts directory
+        Directory.CreateDirectory(scriptsDirectory);
+        var csprojContents = Utils.ReadTextResource("Scripts.csproj");
+        File.WriteAllText(Path.Combine(scriptsDirectory, "Scripts.csproj"), csprojContents);
+
+        var helpersDirectory = Path.Combine(scriptsDirectory, "Helpers");
+        Directory.CreateDirectory(helpersDirectory);
+        var cliHelper = Utils.ReadTextResource("Cli.cs");
+        File.WriteAllText(Path.Combine(helpersDirectory, "Cli.cs"), cliHelper);
+    }
 }
 
 [TaskName("Build")]
@@ -54,7 +70,7 @@ public sealed class BuildTask : FrostingTask<FrostingContext>
         context.DotNetPublish(Path.Combine(scriptsDir, "Scripts.csproj"), new DotNetPublishSettings
         {
             Configuration = "Debug",
-            OutputDirectory = "../scripts/publish/",
+            OutputDirectory = Path.Combine(scriptsDir, "publish/"),
             Runtime = Utils.GetRid(),
             SelfContained = false,
             MSBuildSettings = new DotNetMSBuildSettings()
