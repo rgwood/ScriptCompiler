@@ -11,7 +11,10 @@ This automates much of the remaining hassle involved in using C# for scripting p
 
 ## To-do
 
-- [ ] Embed Scripts.csproj. Write it to scripts directory as needed
+- [x] Embed Scripts.csproj. Write it to scripts directory as needed
+- [x] read .env file
+- [ ] read scripts directory from env var
+- [ ] add init command which creates .env file
 - [ ] Use ~/scripts folder
 - [ ] Easy systemd integration a la https://gist.github.com/rgwood/ede13b8324e4c63855f9b016d8104634
 - [ ] same but for a Windows Service?
