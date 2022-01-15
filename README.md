@@ -8,13 +8,22 @@ ScriptCompiler watches a directory with C# files for changes. Whenever files cha
 
 This automates much of the remaining hassle involved in using C# for scripting purposes.
 
+# Configuration
+
+By default, ScriptCompiler watches for changes in `~/cs-scripts`. To change that, set the `ScriptCompiler_Watch_Directory` environment variable.
+
+ScriptCompiler can also loads environment variables from a `.env` or `.env.scriptcompiler` file in the same directory as the executable:
+
+```
+ScriptCompiler_Watch_Directory="/foo/bar/scripts"
+```
 
 ## To-do
 
 - [x] Embed Scripts.csproj. Write it to scripts directory as needed
 - [x] read .env file
-- [ ] read scripts directory from env var
-- [ ] add init command which creates .env file
-- [ ] Use ~/scripts folder
+- [x] read scripts directory from env var
+- [x] decide on a default script folder to use
+- [x] Use ~/scripts folder
 - [ ] Easy systemd integration a la https://gist.github.com/rgwood/ede13b8324e4c63855f9b016d8104634
 - [ ] same but for a Windows Service?
