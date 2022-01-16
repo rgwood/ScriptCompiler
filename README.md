@@ -18,12 +18,20 @@ ScriptCompiler can also loads environment variables from a `.env` or `.env.scrip
 ScriptCompiler_Watch_Directory="/foo/bar/scripts"
 ```
 
+## Known Limitations
+
+Compiling fails if you run this as a Systemd service (as root or as a specific user). This is a pain because it'd be nice to have the watcher running all the time.
+
+IDE features (IntelliSense, etc.) don't light up automatically in script files. This is an artifact of the MSBuild hackery I'm doing, there might be a way to fix this.
+
 ## To-do
 
+- [ ] Get this working as a Systemd service
 - [x] Embed Scripts.csproj. Write it to scripts directory as needed
 - [x] read .env file
 - [x] read scripts directory from env var
 - [x] decide on a default script folder to use
 - [x] Use ~/scripts folder
+- [ ] add screenshots/examples to readme
 - [ ] Easy systemd integration a la https://gist.github.com/rgwood/ede13b8324e4c63855f9b016d8104634
 - [ ] same but for a Windows Service?
