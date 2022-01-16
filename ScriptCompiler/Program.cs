@@ -12,6 +12,12 @@ public static class Program
 {
     public static async Task Main(string[] args)
     {
+        if (args.Any() && args[0] == "install")
+        {
+            await Systemd.InstallServiceAsync();
+            return;
+        }
+
         AnsiConsole.MarkupLine("Starting up...");
 
         DotEnv.Load(".env");
