@@ -45,6 +45,7 @@ public static class Utils
         var assembly = Assembly.GetExecutingAssembly();
         string resourcePath = name;
         // Format: "{Namespace}.{Folder}.{filename}.{Extension}"
+        // TODO: use System.Reflection.Assembly.GetExecutingAssembly().GetName().Name instead
         if (!name.StartsWith(nameof(ScriptCompiler)))
         {
             resourcePath = assembly.GetManifestResourceNames()
