@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="CliWrap" Version="3.4.0" />
+    <PackageReference Include="Spectre.Console" Version="0.43.0" />
   </ItemGroup>
 
 </Project>
