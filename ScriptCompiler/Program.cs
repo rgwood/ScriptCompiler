@@ -57,13 +57,30 @@ public static class Program
     {
         // set up scripts directory
         Directory.CreateDirectory(scriptDirectory);
-        var csprojContents = Utils.ReadTextResource("Scripts.csproj");
-        File.WriteAllText(Path.Combine(scriptDirectory, "Scripts.csproj"), csprojContents);
+
+        CopyFileIfNotExists("Scripts.csproj");
+        // var csprojContents = Utils.ReadTextResource("Scripts.csproj");
+        // File.WriteAllText(Path.Combine(scriptDirectory, "Scripts.csproj"), csprojContents);
 
         var helpersDirectory = Path.Combine(scriptDirectory, "Helpers");
         Directory.CreateDirectory(helpersDirectory);
-        var cliHelper = Utils.ReadTextResource("Cli.cs");
-        File.WriteAllText(Path.Combine(helpersDirectory, "Cli.cs"), cliHelper);
+
+        var utils = Utils.ReadTextResource("Helpers.Utils.cs");
+        File.WriteAllText(Path.Combine(helpersDirectory, "Utils.cs"), utils);
+
+        var usings = Utils.ReadTextResource("Helpers.GlobalUsings.cs");
+        File.WriteAllText(Path.Combine(helpersDirectory, "GlobalUsings.cs"), usings);
+
+        void CopyFileIfNotExists(string fromName)
+        {
+            string destPath = Path.Combine(scriptDirectory, fromName);
+
+            if (File.Exists(destPath))
+            {
+                var csprojContents = Utils.ReadTextResource(fromName);
+                File.WriteAllText(destPath, csprojContents);
+            }
+        }
     }
 }
 

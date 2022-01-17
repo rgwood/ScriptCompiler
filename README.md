@@ -32,6 +32,10 @@ IDE features (IntelliSense, etc.) don't light up automatically in script files. 
 - [x] read scripts directory from env var
 - [x] decide on a default script folder to use
 - [x] Use ~/scripts folder
+- [x] Add Spectre.Console to scripts
+- [x] Add helper namespace via implicit usings
+- [ ] better extraction of embedded resources. Shouldn't need to hardcode each file
+- [ ] add compiled dir to path on Windows
 - [ ] systemd: set working directory = executable directory
 - [ ] systemd: detect user based on file location. if in `/home/foo/`, the user is `foo`
 - [ ] add screenshots/examples to readme
