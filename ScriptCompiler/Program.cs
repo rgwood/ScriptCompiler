@@ -5,6 +5,7 @@ using Cake.Common.Tools.DotNet.Publish;
 using Cake.Core;
 using Cake.Frosting;
 using Spectre.Console;
+using Utils;
 
 namespace ScriptCompiler;
 
@@ -55,32 +56,8 @@ public static class Program
 
     private static void InitializeScriptDirectory(string scriptDirectory)
     {
-        // set up scripts directory
         Directory.CreateDirectory(scriptDirectory);
-
-        CopyFileIfNotExists("Scripts.csproj");
-        // var csprojContents = Utils.ReadTextResource("Scripts.csproj");
-        // File.WriteAllText(Path.Combine(scriptDirectory, "Scripts.csproj"), csprojContents);
-
-        var helpersDirectory = Path.Combine(scriptDirectory, "Helpers");
-        Directory.CreateDirectory(helpersDirectory);
-
-        var utils = Utils.ReadTextResource("Helpers.Utils.cs");
-        File.WriteAllText(Path.Combine(helpersDirectory, "Utils.cs"), utils);
-
-        var usings = Utils.ReadTextResource("Helpers.GlobalUsings.cs");
-        File.WriteAllText(Path.Combine(helpersDirectory, "GlobalUsings.cs"), usings);
-
-        void CopyFileIfNotExists(string fromName)
-        {
-            string destPath = Path.Combine(scriptDirectory, fromName);
-
-            if (File.Exists(destPath))
-            {
-                var csprojContents = Utils.ReadTextResource(fromName);
-                File.WriteAllText(destPath, csprojContents);
-            }
-        }
+        ResourceUtils.CopyAllEmbeddedResources("EmbeddedResources",scriptDirectory, overwrite: true);
     }
 }
 

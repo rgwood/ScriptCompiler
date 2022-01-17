@@ -8,7 +8,11 @@ ScriptCompiler watches a directory with C# files for changes. Whenever files cha
 
 This automates much of the remaining hassle involved in using C# for scripting purposes.
 
-# Configuration
+## Installation
+
+TODO
+
+## Configuration
 
 By default, ScriptCompiler watches for changes in `~/cs-scripts`. To change that, set the `ScriptCompiler_Watch_Directory` environment variable.
 
@@ -20,19 +24,18 @@ ScriptCompiler_Watch_Directory="/foo/bar/scripts"
 
 ## Known Limitations
 
-Compiling fails if you run this as a Systemd service (as root or as a specific user). This is a pain because it'd be nice to have the watcher running all the time.
-
-IDE features (IntelliSense, etc.) don't light up automatically in script files. This is an artifact of the MSBuild hackery I'm doing, there might be a way to fix this.
+IDE features (IntelliSense, etc.) don't light up automatically in script files. This is an artifact of the MSBuild hackery I'm doing to enable multiple Program files in the same folder, there might be a way to fix this.
 
 ## To-do
 
-- [ ] better extraction of embedded resources. enumerate all embedded resources
 - [ ] Windows: automatically add compiled dir to path: `Environment.SetEnvironmentVariable("Path", newPath, EnvironmentVariableTarget.User);`
 - [ ] Windows: get it running as a Windows Service
 - [ ] add screenshots/examples to readme
 - [ ] Use a CLI framework. System.CommandLine? Cocona?
 - [ ] Add test project
 - [ ] Try trimming ScriptCompiler
+- [ ] Try developing entirely on a Multipass instance
+- [x] better extraction of embedded resources. enumerate all embedded resources
 - [x] systemd: set working directory = executable directory
 - [x] systemd: detect user based on file location. if in `/home/foo/`, the user is `foo`
 - [x] Get this working as a Systemd service
