@@ -27,12 +27,14 @@ IDE features (IntelliSense, etc.) don't light up automatically in script files. 
 ## To-do
 
 - [ ] better extraction of embedded resources. enumerate all embedded resources
-- [ ] systemd: set working directory = executable directory
-- [ ] systemd: detect user based on file location. if in `/home/foo/`, the user is `foo`
 - [ ] Windows: automatically add compiled dir to path: `Environment.SetEnvironmentVariable("Path", newPath, EnvironmentVariableTarget.User);`
 - [ ] Windows: get it running as a Windows Service
 - [ ] add screenshots/examples to readme
 - [ ] Use a CLI framework. System.CommandLine? Cocona?
+- [ ] Add test project
+- [ ] Try trimming ScriptCompiler
+- [x] systemd: set working directory = executable directory
+- [x] systemd: detect user based on file location. if in `/home/foo/`, the user is `foo`
 - [x] Get this working as a Systemd service
 - [x] Embed Scripts.csproj. Write it to scripts directory as needed
 - [x] read .env file
