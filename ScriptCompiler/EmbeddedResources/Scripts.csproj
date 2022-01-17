@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <Compile Include="$(ProgramFile)" />
-    <Compile Include="Helpers\Cli.cs" />
+    <Compile Include="Helpers\*.cs" />
   </ItemGroup>
 
   <ItemGroup>

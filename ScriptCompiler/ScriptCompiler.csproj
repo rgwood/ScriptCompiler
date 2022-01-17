@@ -8,8 +8,12 @@
         <Version>1.0.0</Version>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Remove="EmbeddedResources\Cli.cs" />
-        <EmbeddedResource Include="EmbeddedResources\Cli.cs" />
+        <!-- TODO: figure out why ** globbing won't remove files in Helpers, and simplify this stuff more generally -->
+        <Compile Remove="EmbeddedResources\*.cs" />
+        <Compile Remove="EmbeddedResources\Helpers\*.cs" />
+        
+        <EmbeddedResource Include="EmbeddedResources\*.cs" />
+        <EmbeddedResource Include="EmbeddedResources\Helpers\*" />
         <EmbeddedResource Include="EmbeddedResources\Scripts.csproj" />
     </ItemGroup>
 
