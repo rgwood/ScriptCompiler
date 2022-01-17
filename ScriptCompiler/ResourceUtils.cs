@@ -1,21 +1,21 @@
-
 using System.Reflection;
 
 namespace Utils;
 
 public static class ResourceUtils
 {
-    public static string ReadTextResource(string name)
+    public static string ReadTextResource(string fileNameOrResourcePath)
     {
         // Determine path
         var assembly = Assembly.GetExecutingAssembly();
-        string resourcePath = name;
+        string resourcePath = fileNameOrResourcePath;
         // Format: "{Namespace}.{Folder}.{filename}.{Extension}"
-        // TODO: use System.Reflection.Assembly.GetExecutingAssembly().GetName().Name instead
-        if (!name.StartsWith(nameof(ScriptCompiler)))
+        if (!fileNameOrResourcePath.StartsWith(Assembly.GetExecutingAssembly().GetName().Name!))
         {
+            string resourceName = fileNameOrResourcePath.Replace(Environment.NewLine, ".");
+
             resourcePath = assembly.GetManifestResourceNames()
-                .Single(str => str.EndsWith(name));
+                .Single(str => str.EndsWith(resourceName));
         }
 
         using Stream stream = assembly!.GetManifestResourceStream(resourcePath)!;
@@ -23,16 +23,16 @@ public static class ResourceUtils
         return reader.ReadToEnd();
     }
 
-    public static byte[] ReadBinaryResource(string name)
+    public static byte[] ReadBinaryResource(string fileNameOrResourcePath)
     {
-        string resourceName = name.Replace(Environment.NewLine, ".");
-
         // Determine path
         var assembly = Assembly.GetExecutingAssembly();
-        string resourcePath = name;
+        string resourcePath = fileNameOrResourcePath;
         // Format: "{Namespace}.{Folder}.{filename}.{Extension}"
-        if (!name.StartsWith(Assembly.GetExecutingAssembly().GetName().Name!))
+        if (!fileNameOrResourcePath.StartsWith(Assembly.GetExecutingAssembly().GetName().Name!))
         {
+            string resourceName = fileNameOrResourcePath.Replace(Environment.NewLine, ".");
+
             resourcePath = assembly.GetManifestResourceNames()
                 .Single(str => str.EndsWith(resourceName));
         }
@@ -42,27 +42,19 @@ public static class ResourceUtils
         return r.ReadBytes(int.MaxValue);
     }
 
-    public static void CopyFileIfNotExists(string fromName, string toDirectory)
-    {
-        string destPath = Path.Combine(toDirectory, fromName);
-
-        if (File.Exists(destPath))
-        {
-            var fileContents = ReadBinaryResource(fromName);
-            File.WriteAllBytes(destPath, fileContents);
-        }
-    }
-
     // TODO write a test for this
+    // Do a best-effort attempt to map an embedded resource path to a file path.
+    // Bit tricky because file extensions are ambiguous when encoded in a resource name
     public static string FileNameFromResourceName(string fullResourceName)
     {
+        var validExtensions = new string[] { "cs", "csproj" };
+
         var allResourceNames = Assembly.GetExecutingAssembly().GetManifestResourceNames();
         var currAssembly = Assembly.GetExecutingAssembly();
         var assemblyName = currAssembly.GetName().Name!;
         // TODO parameterize the EmbeddedResources folder
         var prefix = $"{assemblyName}.EmbeddedResources.";
 
-        var validExtensions = new List<string>() { "cs", "csproj" };
 
         // ex: Helpers.GlobalUsings.cs
         var resourceNameNoPrefix = fullResourceName[prefix.Length..];
@@ -91,22 +83,16 @@ public static class ResourceUtils
         foreach (string resourceName in allResourceNames.Where(rn => rn.StartsWith(prefix)))
         {
             string destFilePath = Path.Combine(destDir, FileNameFromResourceName(resourceName));
-            /// aaargh handling extensions is hard
             if (overwrite || !File.Exists(destFilePath))
             {
+                Console.WriteLine($"Copying {resourceName} to {destFilePath}");
+
                 // create directory if necessary
                 Directory.CreateDirectory(Path.GetDirectoryName(destFilePath)!);
-
-                Console.WriteLine($"Copying {resourceName} to {destFilePath}");
-                using Stream stream = currAssembly!.GetManifestResourceStream(resourceName)!;
-                // TODO: optimize this so we don't read the whole g-d file into memory
-                byte[] bytes = new byte[stream.Length];
-                stream.Read(bytes, 0, bytes.Length);
-
-                // using BinaryReader r = new(stream);
-                // TODO: optimize this so we don't read the whole g-d file into memory
-                // var fileBytes = r.ReadBytes(int.MaxValue);
-                File.WriteAllBytes(destFilePath, bytes);
+                
+                using Stream fromStream = currAssembly!.GetManifestResourceStream(resourceName)!;
+                using var toStream = File.Create(destFilePath);
+                fromStream.CopyTo(toStream);
             }    
         }
     }
