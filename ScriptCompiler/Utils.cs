@@ -1,3 +1,4 @@
+using CliWrap;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -5,6 +6,14 @@ namespace ScriptCompiler;
 
 public static class Utils
 {
+    public static Command WithPipeToConsole(this Command cmd)
+    {
+        var stdout = Console.OpenStandardOutput();
+        var stderr = Console.OpenStandardError();
+
+        return cmd | (stdout, stderr);
+    }
+
     public static string GetRid()
     {
         string os;
@@ -42,10 +51,8 @@ public static class Utils
                 .Single(str => str.EndsWith(name));
         }
 
-        using (Stream stream = assembly!.GetManifestResourceStream(resourcePath)!)
-        using (StreamReader reader = new StreamReader(stream!))
-        {
-            return reader.ReadToEnd();
-        }
+        using Stream stream = assembly!.GetManifestResourceStream(resourcePath)!;
+        using StreamReader reader = new(stream!);
+        return reader.ReadToEnd();
     }
 }
