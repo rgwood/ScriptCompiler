@@ -26,7 +26,14 @@ IDE features (IntelliSense, etc.) don't light up automatically in script files. 
 
 ## To-do
 
-- [ ] Get this working as a Systemd service
+- [ ] better extraction of embedded resources. enumerate all embedded resources
+- [ ] systemd: set working directory = executable directory
+- [ ] systemd: detect user based on file location. if in `/home/foo/`, the user is `foo`
+- [ ] Windows: automatically add compiled dir to path: `Environment.SetEnvironmentVariable("Path", newPath, EnvironmentVariableTarget.User);`
+- [ ] Windows: get it running as a Windows Service
+- [ ] add screenshots/examples to readme
+- [ ] Use a CLI framework. System.CommandLine? Cocona?
+- [x] Get this working as a Systemd service
 - [x] Embed Scripts.csproj. Write it to scripts directory as needed
 - [x] read .env file
 - [x] read scripts directory from env var
@@ -34,10 +41,4 @@ IDE features (IntelliSense, etc.) don't light up automatically in script files. 
 - [x] Use ~/scripts folder
 - [x] Add Spectre.Console to scripts
 - [x] Add helper namespace via implicit usings
-- [ ] better extraction of embedded resources. Shouldn't need to hardcode each file
-- [ ] add compiled dir to path on Windows
-- [ ] systemd: set working directory = executable directory
-- [ ] systemd: detect user based on file location. if in `/home/foo/`, the user is `foo`
-- [ ] add screenshots/examples to readme
-- [ ] Easy systemd integration a la https://gist.github.com/rgwood/ede13b8324e4c63855f9b016d8104634
-- [ ] same but for a Windows Service?
+- [x] Easy systemd integration a la https://gist.github.com/rgwood/ede13b8324e4c63855f9b016d8104634
