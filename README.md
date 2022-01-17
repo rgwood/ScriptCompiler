@@ -32,6 +32,8 @@ IDE features (IntelliSense, etc.) don't light up automatically in script files. 
 - [x] read scripts directory from env var
 - [x] decide on a default script folder to use
 - [x] Use ~/scripts folder
+- [ ] systemd: set working directory = executable directory
+- [ ] systemd: detect user based on file location. if in `/home/foo/`, the user is `foo`
 - [ ] add screenshots/examples to readme
 - [ ] Easy systemd integration a la https://gist.github.com/rgwood/ede13b8324e4c63855f9b016d8104634
 - [ ] same but for a Windows Service?
