@@ -18,6 +18,8 @@ public static class Systemd
 
         AnsiConsole.WriteLine($"Installing {processFileName} as a systemd service...");
 
+        string user = TryGetUserFromPath(processPath) ?? "root";
+
         string unitFileContents = @$"
 [Unit]
 Description={description}
@@ -25,6 +27,8 @@ Description={description}
 [Service]
 Type=simple
 ExecStart={processPath}
+User={user}
+WorkingDirectory={Path.GetDirectoryName(processPath)}
 
 [Install]
 WantedBy=multi-user.target";
@@ -46,12 +50,12 @@ WantedBy=multi-user.target";
         try
         {
             AnsiConsole.WriteLine("Enabling service...");
-            await (Cli.Wrap("systemctl").WithArguments($"enable {serviceName}") |
-                (Console.WriteLine, Console.Error.WriteLine)).ExecuteAsync();
+            await Cli.Wrap("systemctl").WithArguments($"enable {serviceName}")
+                .WithPipeToConsole().ExecuteAsync();
 
             AnsiConsole.WriteLine("Starting service...");
-            await (Cli.Wrap("systemctl").WithArguments($"start {serviceName}") |
-                (Console.WriteLine, Console.Error.WriteLine)).ExecuteAsync();
+            await Cli.Wrap("systemctl").WithArguments($"start {serviceName}")
+                .WithPipeToConsole().ExecuteAsync();
         }
         catch (Exception ex)
         {
@@ -62,5 +66,22 @@ WantedBy=multi-user.target";
 
         AnsiConsole.MarkupLine($"[green]Done! Install succeeded.[/]");
         return true;
+    }
+
+    public static string? TryGetUserFromPath(string path)
+    {
+        path = path.Trim();
+        var splitByPath = path.Split('/');
+
+        if (splitByPath.Length <= 1)
+            return null;
+        if (splitByPath[0] == "" && splitByPath[1] == "root")
+            return "root";
+        if (splitByPath.Length <= 2)
+            return null;
+        if (splitByPath[0] == "" && splitByPath[1] == "home")
+            return splitByPath[2];
+
+        return null;
     }
 }
