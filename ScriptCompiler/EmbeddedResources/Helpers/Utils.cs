@@ -1,8 +1,6 @@
-﻿using CliWrap;
+﻿namespace Scripts;
 
-namespace Scripts;
-
-public static class Cli
+public static class Utils
 {
     public static Command WithPipeToConsole(this Command cmd)
     {
@@ -14,6 +12,6 @@ public static class Cli
 
     public static async Task Run(string executable, string args)
     {
-        await CliWrap.Cli.Wrap(executable).WithArguments(args).WithPipeToConsole().ExecuteAsync();
+        await Cli.Wrap(executable).WithArguments(args).WithPipeToConsole().ExecuteAsync();
     }
 }
