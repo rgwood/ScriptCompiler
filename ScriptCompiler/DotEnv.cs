@@ -40,6 +40,7 @@ public static class DotEnv
             }
 
             Environment.SetEnvironmentVariable(p0, p1);
+            Console.WriteLine($"Set environment variable {p0}={p1}");
         }
     }
 }
