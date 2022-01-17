@@ -1,5 +1,4 @@
 using CliWrap;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace ScriptCompiler;

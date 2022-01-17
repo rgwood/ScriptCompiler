@@ -20,8 +20,7 @@ public static class Systemd
 
         string user = TryGetUserFromPath(processPath) ?? "root";
 
-        string unitFileContents = @$"
-[Unit]
+        string unitFileContents = @$"[Unit]
 Description={description}
 
 [Service]
