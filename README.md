@@ -32,9 +32,9 @@ IDE features (IntelliSense, etc.) don't light up automatically in script files. 
 - [ ] Windows: get it running as a Windows Service
 - [ ] add screenshots/examples to readme
 - [ ] Use a CLI framework. System.CommandLine? Cocona?
-- [ ] Add test project
 - [ ] Try trimming ScriptCompiler
 - [ ] Try developing entirely on a Multipass instance
+- [x] Add test project
 - [x] better extraction of embedded resources. enumerate all embedded resources
 - [x] systemd: set working directory = executable directory
 - [x] systemd: detect user based on file location. if in `/home/foo/`, the user is `foo`

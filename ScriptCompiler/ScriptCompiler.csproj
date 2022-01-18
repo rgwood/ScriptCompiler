@@ -12,6 +12,10 @@
         <Compile Remove="EmbeddedResources\**" />
         <EmbeddedResource Include="EmbeddedResources\**" />
     </ItemGroup>
+    
+    <ItemGroup>
+        <InternalsVisibleTo Include="ScriptCompilerTests"/>
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Ben.Demystifier" Version="0.4.1" />
