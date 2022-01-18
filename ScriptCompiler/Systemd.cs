@@ -67,6 +67,12 @@ WantedBy=multi-user.target";
         return true;
     }
 
+    public static void Uninstall()
+    {
+        // TODO implement
+        throw new NotImplementedException();
+    }
+
     public static string? TryGetUserFromPath(string path)
     {
         path = path.Trim();

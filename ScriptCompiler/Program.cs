@@ -1,9 +1,6 @@
-using Cake.Common.IO;
-using Cake.Common.Tools.DotNet;
-using Cake.Common.Tools.DotNet.MSBuild;
-using Cake.Common.Tools.DotNet.Publish;
-using Cake.Core;
-using Cake.Frosting;
+
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Spectre.Console;
 using Utils;
 
@@ -27,28 +24,17 @@ public static class Program
         string watchDirectory = Environment.GetEnvironmentVariable("ScriptCompiler_Watch_Directory") ?? GetDefaultScriptDir();
 
         InitializeScriptDirectory(watchDirectory);
-        AnsiConsole.MarkupLine($"Watching script directory [green]{watchDirectory}[/]");
 
-        using var fsw = new FSWGen(watchDirectory, "*.cs");
-        await foreach (FileSystemEventArgs fse in fsw.Watch())
-        {
-            Console.WriteLine($"{fse.ChangeType} {fse.Name}");
-
-            switch (fse.ChangeType)
+        IHost host = new HostBuilder()
+            .UseWindowsService() // only takes effect on Windows
+            .ConfigureServices(services =>
             {
-                case WatcherChangeTypes.Created:
-                case WatcherChangeTypes.Changed:
-                    new CakeHost()
-                        .UseContext<FrostingContext>()
-                        .UseCakeSetting("ScriptName", fse.Name)
-                        .UseCakeSetting("ScriptDir", watchDirectory)
-                        .Run(args.Append("--verbosity=diagnostic"));
-                    break;
-                default:
-                    Console.WriteLine("Not implemented yet");
-                    break;
-            }
-        }
+                // TODO configure Serilog
+                services.AddHostedService<BuildRunner>(_ => new BuildRunner(watchDirectory));
+            })
+            .Build();
+
+        await host.RunAsync();
     }
 
     private static string GetDefaultScriptDir()
@@ -57,46 +43,6 @@ public static class Program
     private static void InitializeScriptDirectory(string scriptDirectory)
     {
         Directory.CreateDirectory(scriptDirectory);
-        ResourceUtils.CopyAllEmbeddedResources("EmbeddedResources",scriptDirectory, overwrite: true);
+        ResourceUtils.CopyAllEmbeddedResources("EmbeddedResources", scriptDirectory, overwrite: true);
     }
-}
-
-[TaskName("Build")]
-public sealed class BuildTask : FrostingTask<FrostingContext>
-{
-    public override void Run(FrostingContext context)
-    {
-        var scriptName = context.Configuration.GetValue("ScriptName");
-        if (string.IsNullOrEmpty(scriptName))
-            throw new ArgumentException("ScriptName not set");
-
-        var scriptDir = context.Configuration.GetValue("ScriptDir");
-        if (string.IsNullOrEmpty(scriptDir))
-            throw new ArgumentException("Script directory not set");
-
-        var scriptNameNoExtension = Path.GetFileNameWithoutExtension(scriptName);
-
-        context.DotNetPublish(Path.Combine(scriptDir, "Scripts.csproj"), new DotNetPublishSettings
-        {
-            Configuration = "Debug",
-            OutputDirectory = Path.Combine(scriptDir, "publish/"),
-            Runtime = Utils.GetRid(),
-            SelfContained = false,
-            MSBuildSettings = new DotNetMSBuildSettings()
-                .WithProperty("ProgramFile", scriptName)
-                .WithProperty("AssemblyName", scriptNameNoExtension)
-                .WithProperty("PublishSingleFile", "true")
-                .WithProperty("DebugType", "embedded")
-                .WithProperty("DeleteExistingFiles", "false")
-        });
-
-        context.EnsureDirectoryExists(Path.Combine(scriptDir, "compiled"));
-        context.CopyFiles(Path.Combine(scriptDir, "publish/*"), Path.Combine(scriptDir, "compiled/"));
-    }
-}
-
-[TaskName("Default")]
-[IsDependentOn(typeof(BuildTask))]
-public class DefaultTask : FrostingTask
-{
 }

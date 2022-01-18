@@ -29,11 +29,14 @@ IDE features (IntelliSense, etc.) don't light up automatically in script files. 
 ## To-do
 
 - [ ] Windows: automatically add compiled dir to path: `Environment.SetEnvironmentVariable("Path", newPath, EnvironmentVariableTarget.User);`
-- [ ] Windows: get it running as a Windows Service
+- [ ] Windows: get installation as service working
 - [ ] add screenshots/examples to readme
-- [ ] Use a CLI framework. System.CommandLine? Cocona?
+- [ ] Use a CLI framework. System.CommandLine? Cocona? CliFx?
 - [ ] Try trimming ScriptCompiler
 - [ ] Try developing entirely on a Multipass instance
+- [ ] Add Serilog
+- [ ] Log to file so we have better visibility when running as a Windows Service
+- [x] Windows: get it running as a Windows Service
 - [x] Add test project
 - [x] better extraction of embedded resources. enumerate all embedded resources
 - [x] systemd: set working directory = executable directory
