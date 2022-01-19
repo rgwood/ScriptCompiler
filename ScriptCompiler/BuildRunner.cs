@@ -5,6 +5,7 @@ using Cake.Common.Tools.DotNet.Publish;
 using Cake.Frosting;
 using Microsoft.Extensions.Hosting;
 using Spectre.Console;
+using Utils;
 
 namespace ScriptCompiler;
 
@@ -63,7 +64,7 @@ public sealed class BuildTask : FrostingTask<FrostingContext>
         {
             Configuration = "Debug",
             OutputDirectory = Path.Combine(scriptDir, "publish/"),
-            Runtime = Utils.GetRid(),
+            Runtime = DotnetUtils.GetRid(),
             SelfContained = false,
             MSBuildSettings = new DotNetMSBuildSettings()
                 .WithProperty("ProgramFile", scriptName)

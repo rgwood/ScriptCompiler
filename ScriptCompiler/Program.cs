@@ -1,22 +1,29 @@
-
+using CliFx;
+using CliFx.Attributes;
+using CliFx.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Spectre.Console;
 using Utils;
 
 namespace ScriptCompiler;
 
 public static class Program
 {
-    public static async Task Main(string[] args)
+    public static async Task Main()
     {
-        if (args.Any() && args[0] == "install")
-        {
-            await Systemd.InstallServiceAsync();
-            return;
-        }
+        await new CliApplicationBuilder()
+            .AddCommandsFromThisAssembly()
+            .Build()
+            .RunAsync();
+    }
+}
 
-        AnsiConsole.MarkupLine("Starting up...");
+[Command]
+public class DefaultCommand : ICommand
+{
+    public async ValueTask ExecuteAsync(IConsole console)
+    {
+        console.Output.WriteLine("Starting up...");
 
         DotEnv.Load(".env");
         DotEnv.Load(".env.scriptcompiler"); // in case there are other apps in the same dir as ScriptCompiler
@@ -25,7 +32,7 @@ public static class Program
 
         InitializeScriptDirectory(watchDirectory);
 
-        IHost host = new HostBuilder()
+        var host = new HostBuilder()
             .UseWindowsService() // only takes effect on Windows
             .ConfigureServices(services =>
             {
@@ -44,5 +51,14 @@ public static class Program
     {
         Directory.CreateDirectory(scriptDirectory);
         ResourceUtils.CopyAllEmbeddedResources("EmbeddedResources", scriptDirectory, overwrite: true);
+    }
+}
+
+[Command("install")]
+public class InstallCommand : ICommand
+{
+    public async ValueTask ExecuteAsync(IConsole console)
+    {
+        await Systemd.InstallServiceAsync();
     }
 }

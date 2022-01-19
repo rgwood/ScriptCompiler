@@ -31,12 +31,12 @@ IDE features (IntelliSense, etc.) don't light up automatically in script files. 
 - [ ] Windows: automatically add compiled dir to path: `Environment.SetEnvironmentVariable("Path", newPath, EnvironmentVariableTarget.User);`
 - [ ] Windows: get installation as service working
 - [ ] add screenshots/examples to readme
-- [ ] Use a CLI framework. System.CommandLine? Cocona? CliFx?
-- [ ] Try trimming ScriptCompiler
 - [ ] Try developing entirely on a Multipass instance
 - [ ] Add Serilog
 - [ ] Log to file so we have better visibility when running as a Windows Service
 - [ ] Fancy error reporting mechanism: when compiling foo.exe fails, replace foo.exe with an exe that displays the error message and asks "would you like to rerun the last version?"
+- [x] Use a CLI framework. System.CommandLine? Cocona? CliFx?
+- [x] Try trimming ScriptCompiler
 - [x] Windows: get it running as a Windows Service
 - [x] Add test project
 - [x] better extraction of embedded resources. enumerate all embedded resources
