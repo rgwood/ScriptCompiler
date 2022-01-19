@@ -1,9 +1,7 @@
-using Cake.Common.IO;
-using Cake.Common.Tools.DotNet;
-using Cake.Common.Tools.DotNet.MSBuild;
-using Cake.Common.Tools.DotNet.Publish;
-using Cake.Frosting;
+using CliWrap;
+using CliWrap.Buffered;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 using Spectre.Console;
 using Utils;
 
@@ -22,20 +20,61 @@ public class BuildRunner : BackgroundService
     {
         AnsiConsole.MarkupLine($"Watching script directory [green]{_watchDirectory}[/]");
 
+        string scriptProjPath = Path.Combine(_watchDirectory, "Scripts.csproj");
+
         using var fsw = new FSWGen(_watchDirectory, "*.cs");
         await foreach (FileSystemEventArgs fse in fsw.Watch(stoppingToken))
         {
             Console.WriteLine($"{fse.ChangeType} {fse.Name}");
 
+            var scriptNameNoExtension = Path.GetFileNameWithoutExtension(fse.Name);
+
             switch (fse.ChangeType)
             {
                 case WatcherChangeTypes.Created:
                 case WatcherChangeTypes.Changed:
-                    new CakeHost()
-                        .UseContext<FrostingContext>()
-                        .UseCakeSetting("ScriptName", fse.Name)
-                        .UseCakeSetting("ScriptDir", _watchDirectory)
-                        .Run(new string[] {"--verbosity=diagnostic"});
+
+                    Log.Information($"Starting build of {fse.Name}");
+                    // TODO handle failures with a nice big error message
+                    var result = await Cli.Wrap("dotnet")
+                        .WithWorkingDirectory(_watchDirectory)
+                        .WithArguments(new string[]{
+                            "publish",
+                            "--configuration=Release",
+                            $"--runtime={DotnetUtils.GetRid()}",
+                            "--self-contained=true",
+                            $"\"{scriptProjPath}\"",
+                            $"-p:ProgramFile={fse.Name}",
+                            $"-p:AssemblyName={scriptNameNoExtension}",
+                            $"-p:PublishSingleFile=true",
+                            $"-p:DebugType=embedded",
+                            $"-p:DeleteExistingFiles=false",
+                            "--output=publish/"})
+                            .WithPipeToConsole()
+                            .WithValidation(CommandResultValidation.None)
+                            .ExecuteBufferedAsync(stoppingToken);
+
+                    if(result.ExitCode == 0)
+                    {
+                        Log.Information(result.StandardOutput);
+                    }
+                    else
+                    {
+                        Log.Error(result.StandardOutput);
+                        continue;
+                    }
+
+                    var compiledDir = Path.Combine(_watchDirectory, "compiled");
+                    AnsiConsole.WriteLine($"Copying compiled script to {compiledDir}");
+                    Directory.CreateDirectory(compiledDir);
+                    var publishDir = Path.Combine(_watchDirectory, "publish");
+
+                    foreach(string filePath in Directory.GetFiles(publishDir))
+                    {
+                        var fileName = Path.GetFileName(filePath);
+                        File.Copy(filePath, Path.Combine(compiledDir, fileName), overwrite: true);
+                    }
+
                     break;
                 default:
                     Console.WriteLine("Not implemented yet");
@@ -43,45 +82,4 @@ public class BuildRunner : BackgroundService
             }
         }
     }
-}
-
-[TaskName("Build")]
-public sealed class BuildTask : FrostingTask<FrostingContext>
-{
-    public override void Run(FrostingContext context)
-    {
-        var scriptName = context.Configuration.GetValue("ScriptName");
-        if (string.IsNullOrEmpty(scriptName))
-            throw new ArgumentException("ScriptName not set");
-
-        var scriptDir = context.Configuration.GetValue("ScriptDir");
-        if (string.IsNullOrEmpty(scriptDir))
-            throw new ArgumentException("Script directory not set");
-
-        var scriptNameNoExtension = Path.GetFileNameWithoutExtension(scriptName);
-
-        // Seems like there is no way to get the console output from the Cake build. WTF?
-        context.DotNetPublish(Path.Combine(scriptDir, "Scripts.csproj"), new DotNetPublishSettings
-        {
-            Configuration = "Debug",
-            OutputDirectory = Path.Combine(scriptDir, "publish/"),
-            Runtime = DotnetUtils.GetRid(),
-            SelfContained = false,
-            MSBuildSettings = new DotNetMSBuildSettings()
-                .WithProperty("ProgramFile", scriptName)
-                .WithProperty("AssemblyName", scriptNameNoExtension)
-                .WithProperty("PublishSingleFile", "true")
-                .WithProperty("DebugType", "embedded")
-                .WithProperty("DeleteExistingFiles", "false")
-        });
-
-        context.EnsureDirectoryExists(Path.Combine(scriptDir, "compiled"));
-        context.CopyFiles(Path.Combine(scriptDir, "publish/*"), Path.Combine(scriptDir, "compiled/"));
-    }
-}
-
-[TaskName("Default")]
-[IsDependentOn(typeof(BuildTask))]
-public class DefaultTask : FrostingTask
-{
 }
