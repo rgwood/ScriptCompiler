@@ -1,18 +1,9 @@
-using CliWrap;
 using System.Runtime.InteropServices;
 
-namespace ScriptCompiler;
+namespace Utils;
 
-public static class Utils
+public static class DotnetUtils
 {
-    public static Command WithPipeToConsole(this Command cmd)
-    {
-        var stdout = Console.OpenStandardOutput();
-        var stderr = Console.OpenStandardError();
-
-        return cmd | (stdout, stderr);
-    }
-
     public static string GetRid()
     {
         string os;

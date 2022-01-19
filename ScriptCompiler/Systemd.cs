@@ -2,7 +2,7 @@
 using CliWrap;
 using Spectre.Console;
 
-namespace ScriptCompiler;
+namespace Utils;
 
 public static class Systemd
 {

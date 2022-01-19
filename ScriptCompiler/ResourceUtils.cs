@@ -42,7 +42,6 @@ public static class ResourceUtils
         return r.ReadBytes(int.MaxValue);
     }
 
-    // TODO write a test for this
     // Do a best-effort attempt to map an embedded resource path to a file path.
     // Bit tricky because file extensions are ambiguous when encoded in a resource name
     public static string FileNameFromResourceName(string fullResourceName)
@@ -54,7 +53,6 @@ public static class ResourceUtils
         var assemblyName = currAssembly.GetName().Name!;
         // TODO parameterize the EmbeddedResources folder
         var prefix = $"{assemblyName}.EmbeddedResources.";
-
 
         // ex: Helpers.GlobalUsings.cs
         var resourceNameNoPrefix = fullResourceName[prefix.Length..];
@@ -96,5 +94,4 @@ public static class ResourceUtils
             }    
         }
     }
-
 }
