@@ -32,9 +32,10 @@ IDE features (IntelliSense, etc.) don't light up automatically in script files. 
 - [ ] Windows: get installation as service working
 - [ ] add screenshots/examples to readme
 - [ ] Try developing entirely on a Multipass instance
-- [ ] Add Serilog
+- [ ] Replace Cake with simple `dotnet publish` call. Can't programmatically get build output from Cake, lame
 - [ ] Log to file so we have better visibility when running as a Windows Service
 - [ ] Fancy error reporting mechanism: when compiling foo.exe fails, replace foo.exe with an exe that displays the error message and asks "would you like to rerun the last version?"
+- [x] Add Serilog
 - [x] Use a CLI framework. System.CommandLine? Cocona? CliFx?
 - [x] Try trimming ScriptCompiler
 - [x] Windows: get it running as a Windows Service

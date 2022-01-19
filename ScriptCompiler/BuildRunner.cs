@@ -60,6 +60,7 @@ public sealed class BuildTask : FrostingTask<FrostingContext>
 
         var scriptNameNoExtension = Path.GetFileNameWithoutExtension(scriptName);
 
+        // Seems like there is no way to get the console output from the Cake build. WTF?
         context.DotNetPublish(Path.Combine(scriptDir, "Scripts.csproj"), new DotNetPublishSettings
         {
             Configuration = "Debug",

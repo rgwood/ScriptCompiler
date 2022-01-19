@@ -3,6 +3,7 @@ using CliFx.Attributes;
 using CliFx.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 using Utils;
 
 namespace ScriptCompiler;
@@ -23,7 +24,13 @@ public class DefaultCommand : ICommand
 {
     public async ValueTask ExecuteAsync(IConsole console)
     {
-        console.Output.WriteLine("Starting up...");
+        using var log = new LoggerConfiguration()
+            .WriteTo.Console(outputTemplate: "{Message:lj}{NewLine}{Exception}")
+            .WriteTo.File("ScriptCompiler.log", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+
+        Log.Logger = log;
+        Log.Information("Starting up...");
 
         DotEnv.Load(".env");
         DotEnv.Load(".env.scriptcompiler"); // in case there are other apps in the same dir as ScriptCompiler
@@ -36,7 +43,6 @@ public class DefaultCommand : ICommand
             .UseWindowsService() // only takes effect on Windows
             .ConfigureServices(services =>
             {
-                // TODO configure Serilog
                 services.AddHostedService<BuildRunner>(_ => new BuildRunner(watchDirectory));
             })
             .Build();
