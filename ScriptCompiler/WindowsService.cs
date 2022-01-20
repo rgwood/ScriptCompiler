@@ -5,7 +5,7 @@ namespace Utils;
 
 public class WindowsService
 {
-    public static async Task InstallAsync()
+    public static void Install()
     {
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
