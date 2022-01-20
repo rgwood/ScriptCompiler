@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  build-test:
 
     runs-on: ubuntu-latest
 
@@ -23,10 +23,21 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+      
+  publish:
+  
+    runs-on: ubuntu-latest
+    strategy:
+            matrix:
+                rid:
+                    - linux-x64
+                    - win-x64
+    
+    steps:
     - name: Publish-Linux-x64
-      run: dotnet publish ScriptCompiler/ScriptCompiler.csproj --configuration Release --runtime linux-x64 --self-contained true -p:PublishSingleFile=true -p:DebugType=embedded --output linux-x64/
+      run: dotnet publish ScriptCompiler/ScriptCompiler.csproj --configuration Release --runtime '${{ matrix.rid }}' --self-contained true -p:PublishSingleFile=true -p:DebugType=embedded --output publish/
     - name: Upload publish output
       uses: actions/upload-artifact@v2
       with:
-        name: Linux-x64
-        path: /home/runner/work/ScriptCompiler/ScriptCompiler/linux-x64/
+        name: '${{ matrix.rid }}'
+        path: /home/runner/work/ScriptCompiler/ScriptCompiler/publish/
