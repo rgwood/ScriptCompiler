@@ -25,8 +25,8 @@ jobs:
       run: dotnet test --no-build --verbosity normal
     - name: Publish-Linux-x64
       run: dotnet publish ScriptCompiler/ScriptCompiler.csproj --configuration Release --runtime linux-x64 --self-contained true -p:PublishSingleFile=true -p:DebugType=embedded --output linux-x64/
-#    - name: Upload WebApp1 Build Artifact
-#      uses: actions/upload-artifact@v2
-#      with:
-#        name: WebApp1
-#        path: /home/runner/work/Playground/Playground/src/WebApp1/bin/Debug/netcoreapp3.1/publish/
+    - name: Upload publish output
+      uses: actions/upload-artifact@v2
+      with:
+        name: Linux-x64
+        path: /home/runner/work/ScriptCompiler/ScriptCompiler/linux-x64/
