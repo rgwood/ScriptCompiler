@@ -12,9 +12,23 @@ Also, this has been stuck in my head for a while:
 
 > [My OS has no notion of build system. It has all the source code on it and I can edit anything and run the command again with the change immediately applied. Interpreter or compiler, I don't know, that's an implementation detail. Then I wake up.](https://twitter.com/davidcrawshaw/status/1300614954865876992?s=20)
 
-## Installation
+## Get Started
 
-TODO
+ScriptCompiler builds are provided for Windows, Linux, and macOS.
+
+1. Install [the .NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) if you haven't already.
+2. [Navigate to the latest workflow on the GitHub Actions page](https://github.com/rgwood/ScriptCompiler/actions), then download the relevant build artifact for your OS (ex: `linux-arm64` for Linux on ARM).
+3. Extract the executable to wherever you would like, and run it.
+4. Create a `~/cs-scripts/hello.cs` file with 1 line: `Console.WriteLine("Hello World!");`
+5. Run `~/cs-scripts/compiled/hello` (`hello.exe` on Windows). Done!
+
+## Install as Service
+
+ScriptCompiler comes with systemd and Windows Service integration, in case you'd like to leave it running all the time.
+
+On Linux, run `sudo ./scriptcompiler install` to install it as a systemd service.
+
+On Windows, run `scriptcompiler.exe install` from an administrator terminal.
 
 ## Build From Source
 
@@ -44,9 +58,9 @@ Compilation could theoretically be faster. We're currently just calling `dotnet 
 - [ ] Windows: get installation as service working
 - [ ] add screenshots/examples to readme
 - [ ] Fancy error reporting mechanism: when compiling foo.exe fails, replace foo.exe with an exe that displays the error message and asks "would you like to rerun the last version?"
-- [ ] GitHub Actions - build
-- [ ] GitHub Actions - test
-- [ ] GitHub Actions - publish
+- [x] GitHub Actions - build
+- [x] GitHub Actions - test
+- [x] GitHub Actions - publish
 - [x] Try developing entirely on a Multipass instance
 - [x] Log to file so we have better visibility when running as a Windows Service
 - [x] Replace Cake with simple `dotnet publish` call. Can't programmatically get build output from Cake, lame
