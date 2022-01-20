@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using CliWrap;
 using CliWrap.Buffered;
 using Microsoft.Extensions.Hosting;
@@ -25,6 +26,7 @@ public class BuildRunner : BackgroundService
         using var fsw = new FSWGen(_watchDirectory, "*.cs");
         await foreach (FileSystemEventArgs fse in fsw.Watch(stoppingToken))
         {
+            var sw = Stopwatch.StartNew();
             Console.WriteLine($"{fse.ChangeType} {fse.Name}");
 
             var scriptNameNoExtension = Path.GetFileNameWithoutExtension(fse.Name);
@@ -74,6 +76,7 @@ public class BuildRunner : BackgroundService
                         var fileName = Path.GetFileName(filePath);
                         File.Copy(filePath, Path.Combine(compiledDir, fileName), overwrite: true);
                     }
+                    AnsiConsole.MarkupLine($"Finished in [green]{sw.ElapsedMilliseconds}[/]ms");
 
                     break;
                 default:
