@@ -1,5 +1,7 @@
 # ScriptCompiler
 
+![image](https://user-images.githubusercontent.com/26268125/150706749-a05d0338-f672-462a-92d8-a84420d2c2cc.png)
+
 ScriptCompiler watches a directory with C# files for changes. Whenever files change, it recompiles them and puts the resulting executable in a known directory.
 
 This automates much of the remaining hassle involved in using C# for scripting purposes.
