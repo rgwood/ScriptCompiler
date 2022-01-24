@@ -1,12 +1,12 @@
 # ScriptCompiler
 
-![image](https://user-images.githubusercontent.com/26268125/150706749-a05d0338-f672-462a-92d8-a84420d2c2cc.png)
+![image](https://user-images.githubusercontent.com/26268125/150707633-82eb85fd-3247-450f-b918-879c41ac4090.png)
 
 ScriptCompiler is a simple tool for scripting in C#. It watches a directory with C# files for changes, and whenever a file changes it gets compiled into its own executable. It also comes with an opinionated set of utilities to make scripting easier.
 
 ## Why?
 
-C# the language is pretty succinct these days ([top-level statements](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/program-structure/top-level-statements), [global usings](https://www.hanselman.com/blog/implicit-usings-in-net-6)). But the tooling around the language still isn't quite perfect for scripting; you still (normally) need a project file for every program, and `dotnet run` takes a second or two.
+C# the language is pretty succinct these days ([top-level statements](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/program-structure/top-level-statements), [global usings](https://www.hanselman.com/blog/implicit-usings-in-net-6)) and the compiler is fast - seems like it should be good for scripting! But the tooling around the language still isn't quite there yet; you (normally) need a project file for every program, and `dotnet run` takes a second or two.
 
 Also, this has been stuck in my head for a while:
 
@@ -56,8 +56,8 @@ Compilation could theoretically be faster. We're currently just calling `dotnet 
 
 - [ ] Windows: automatically add compiled dir to path: `Environment.SetEnvironmentVariable("Path", newPath, EnvironmentVariableTarget.User);`
 - [ ] Windows: get installation as service working
-- [ ] add screenshots/examples to readme
 - [ ] Fancy error reporting mechanism: when compiling foo.exe fails, replace foo.exe with an exe that displays the error message and asks "would you like to rerun the last version?"
+- [x] add screenshots/examples to readme
 - [x] GitHub Actions - build
 - [x] GitHub Actions - test
 - [x] GitHub Actions - publish
