@@ -28,7 +28,7 @@ ScriptCompiler comes with systemd and Windows Service integration, in case you'd
 
 On Linux, run `sudo ./scriptcompiler install` to install it as a systemd service.
 
-On Windows, run `scriptcompiler.exe install` from an administrator terminal.
+On Windows, run `scriptcompiler.exe install` from an administrator terminal. This is a work in progress, you might need to tweak which account the service runs as.
 
 ## Build From Source
 
