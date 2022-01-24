@@ -2,13 +2,11 @@
 
 ![image](https://user-images.githubusercontent.com/26268125/150706749-a05d0338-f672-462a-92d8-a84420d2c2cc.png)
 
-ScriptCompiler watches a directory with C# files for changes. Whenever files change, it recompiles them and puts the resulting executable in a known directory.
-
-This automates much of the remaining hassle involved in using C# for scripting purposes.
+ScriptCompiler is a simple tool for scripting in C#. It watches a directory with C# files for changes, and whenever a file changes it gets compiled into its own executable. It also comes with an opinionated set of utilities to make scripting easier.
 
 ## Why?
 
-C# the language is pretty succinct these days ([top-level statements](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/program-structure/top-level-statements), [global usings](https://www.hanselman.com/blog/implicit-usings-in-net-6)). But the tooling around the language still isn't quite perfect for scripting; you still need a project file for every program, and `dotnet run` takes a second or two.
+C# the language is pretty succinct these days ([top-level statements](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/program-structure/top-level-statements), [global usings](https://www.hanselman.com/blog/implicit-usings-in-net-6)). But the tooling around the language still isn't quite perfect for scripting; you still (normally) need a project file for every program, and `dotnet run` takes a second or two.
 
 Also, this has been stuck in my head for a while:
 
