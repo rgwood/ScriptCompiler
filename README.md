@@ -6,7 +6,7 @@ ScriptCompiler is a simple tool for scripting in C#. It watches a directory with
 
 ## Why?
 
-C# the language is pretty succinct these days ([top-level statements](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/program-structure/top-level-statements), [global usings](https://www.hanselman.com/blog/implicit-usings-in-net-6)) and the compiler is fast - seems like it should be good for scripting! But the tooling around the language still isn't quite there yet; you (normally) need a project file for every program, and `dotnet run` takes a second or two.
+C# the language is pretty succinct these days ([top-level statements](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/program-structure/top-level-statements), [global usings](https://www.hanselman.com/blog/implicit-usings-in-net-6)) - seems like it should be good for scripting! But the tooling around the language still isn't quite there yet; you need a project file for every program, and `dotnet run` isn't as fast as I'd like. [This proposal should help](https://github.com/dotnet/designs/pull/213) (upvote it!) but who knows when it will be done.
 
 Also, this has been stuck in my head for a while:
 
